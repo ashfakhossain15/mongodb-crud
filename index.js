@@ -22,7 +22,7 @@ const client = new MongoClient(uri, {
   },
 });
 async function run() {
-  try { 
+  try {
     await client.connect();
 
     const database = client.db("usersDB");
@@ -32,6 +32,12 @@ async function run() {
       const user = req.body;
       console.log("New user", user);
       const result = await usersCollection.insertOne(user);
+      res.send(result);
+    });
+
+    app.get("/user", async (req, res) => {
+      const cursor = usersCollection.find();
+      const result = await cursor.toArray();
       res.send(result);
     });
 
@@ -52,6 +58,3 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Server is listening on ${port}`);
 });
-
-
-
